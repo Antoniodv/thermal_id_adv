@@ -1,0 +1,34 @@
+num_cores = 8;
+num_sock = 2;
+num_cpufeat = 3;
+num_corefeat = 5;
+
+model_order = 2;
+num_prev_time = 20;
+num_add_eq = 10;
+
+addpath("Diversi/");
+addpath("Modelli/");
+
+
+%% Dati Galileo di Diversi
+
+load('Modelli/datiGalileo[87842181].mat')
+
+for core = 1:num_cores
+    [theta,sigv] = misoarxbls(U,Y(:,1),model_order);
+end
+
+%% Dati Galileo di produzione
+
+load('/Users/FedeAdm/Documents/Postdoc Bologna/HPC Applications/power-models/outputs/PowPartTherm_node062-0.mat')
+
+pow_part = [sum(pow_part(:,1:2),2), pow_part(:,3:end)];
+num_tim = size(pow_part,1);
+
+for core = 1:num_cores
+    for ind_time = num_prev_time+1:num_tim
+        [theta,sigv] = misoarxbls(pow_part(ind_time-num_prev_time : ind_time-1, :), ...
+            temperatures(ind_time-num_prev_time : ind_time-1, core));
+    end
+end
