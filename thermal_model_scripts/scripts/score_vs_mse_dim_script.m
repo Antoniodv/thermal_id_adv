@@ -108,7 +108,6 @@ for core_to_evaluate_idx = chosen_cores_array
         U_active_cores = U(:, active_cores);
         T_measured = T(:,core_to_evaluate_index);
 
-
         % COMPUTE THERMAL MODEL OF CHOSEN CORES
         [THETA_TH_vector, sigv,sigw, res, condn, svd_ident] = ...
             misoarxbls(U_active_cores, T_measured, thrm.model_order,  thrm.num_add_eq);
